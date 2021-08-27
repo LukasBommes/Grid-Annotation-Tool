@@ -65,10 +65,10 @@ def create_annotation_data(save_data):
     #annotation_data = save_data
     annotation_data = {}
     annotation_data["image"] = copy.deepcopy(save_data["image"])
-    annotation_data["pv_modules"] = copy.deepcopy(save_data["pv_modules"])
+    annotation_data["grid_cells"] = copy.deepcopy(save_data["grid_cells"])
     # remove ids from corners in PV modules
     try:
-        for p in annotation_data["pv_modules"]:
+        for p in annotation_data["grid_cells"]:
             corners = p["corners"]
             for corner in corners:
                 del corner["id"]

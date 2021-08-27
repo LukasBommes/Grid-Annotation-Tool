@@ -2,7 +2,7 @@
 
 A tool for annotating grid structures in images for computer vision research and applications. For some applications you may want to annotate a grid structure to train, for example, an instance segmentation model, such as Mask R-CNN.
 
-Different from existing annotation tools you do not have to draw a bounding box for each cell in your grid. Instead, you annotate the intersection lines, which is faster and yields cleaner co-linear edges.
+Different from existing annotation tools you do not have to draw a bounding box for each cell in your grid. Instead, you annotate the intersection lines, which is faster and yields cleaner co-linear edges. To account for lens distortion you can annotate both lines and curves.
 
 We initially developed this tool for annotating instance segmentation masks of photovoltaics modules, but it may be useful for other applications.
 
@@ -14,36 +14,58 @@ This project requires Python 3, [Flask](https://pypi.org/project/Flask/) and [Fl
 
 ### Quickstart
 
-1) Rename your JPEG images with random UUID4 that can be generated for example with pythons UUID library
-1) Insert your images into the directory `static/uploads`
-2) Launch the tool from the root directory with the command `python flask_server.py`
-3) In your webbrowser navigate to 127.0.0.1:5000
+1. Open a terminal in the project root and run `python annotation_tool.py`
+2. Navigate to 127.0.0.1:5000 in your web browser
 
-You should now see the annotation app.
+You should now see the annotation app and a list of example images in the left sidebar. You can click on one of the images and begin annotation.
 
 
-### How to annotate PV modules
+### Annotating your own images
 
-1) Select an image in the left sidebar by clicking on one of the image IDs
-2) Draw auxiliary lines / auxiliary curves by clicking on "Draw Auxiliary Line" / "Draw Auxiliary Curve" and placing two / three points by clicking into the image. these lines should outline the grid lines between individual PV modules.
-3) Click on "Get Intersections" to compute the intersection points between auxiliary lines and curves. When the auxiliary lines were placed correctly the intersections should approximately lie on the corners of the PV modules.
-4) You can optionally annotate corners of PV modules manually by clicking "Add corners" and placing them in the image by clicking.
-5) Click on "Create Modules" to indicate which corners belong to the same PV module. When hovering over the image four dashed lines will connect your cursor to four corner points. Move the cursor roughly in the center of a module and click. A new PV module is being placed.
-6) In some cases the automatic selection of four corner points might not work. In these cases click "Create Modules (manual)" and select the four corners of a PV module by clicking. A PC module will be created.
-7) You can add optional information to each module by clicking "Edit Module Details", clicking on a PV module and checking/unchecking the options in the left sidebar (e.g. "Module partially visible", "Hot cell(s)", etc.). Repeat this for every PV module you want to annotate.
+1. Rename your images with random UUID4 (e.g. with Python's UUID library)
+2. Place your images in `static/uploads`
+3. Start the annotation tool as explained above
 
-To erase items, such as corners or auxiliary lines, choose the "Erase" tool and click the item in the image. When you erase a corner all associated PV modules will be removed.
+
+### Annotating a Grid
+
+1. Select an image in the left sidebar by clicking on one of the image IDs
+2. Draw auxiliary lines / auxiliary curves by clicking on "Draw Auxiliary Line" / "Draw Auxiliary Curve" and placing two / three points by clicking into the image. These lines should outline the grid lines between individual grid cells.
+3. Click on "Get Intersections" to compute the intersection points between auxiliary lines and curves.
+4. You can optionally add intersection points manually by clicking "Add corners" and placing them in the image by clicking.
+5. Click on "Create Grid Cell" to indicate which corners belong to a grid cell. When hovering over the image four dashed lines will connect your cursor to four corner points. Move the cursor roughly in the center of the grid cell and click. A new grid cell is being placed.
+6. If automatic selection of corner points is not possible, click "Create Grid Cell (manual)" and select the four corners of a grid cell by clicking.
+7. If you want to handle truncated (i.e. partially visible) grid cells differently in your application, you can click the "Toggle Cell Visibility" button. Now, you can click on grid cells and mark them as truncated. A truncated grid cell will be rendered in yellow.
+
+To erase items, such as corners or auxiliary lines, click the "Erase" button and click the item you want to delete in the image. When you erase a corner all associated grid cells will be removed.
 
 You can drag auxiliary lines or corners in the image by clicking an dragging.
 
 
-### Saving an annotation
-
-To save the annotation simply go to the next image by slecting it in the left sidebar. The annotation is being saved automatically in the directory `static/annotations`. For each image a json file named with the same UUID4 as the corresponding image can be found. Another json file is placed under `static/save`. This file is for internal use and contains additional information which is not necessary for downstream tasks.
-
-
 ### Annotation File Format
 
+To save the annotation simply go to the next image by selecting it in the left sidebar. The annotation is saved in a separate JSON file for each image under `static/annotations`. The file name corresponds to the image UUID. Another json file is placed under `static/save`, which is for internal use only.
+
+The annotation file format is as follows, i.e. each image has a list of grid cells, each with four corner points, one center point, its own UUID and a boolean flag indicating whether the grid cell is truncated.
+```
+{
+  "image": "0a002eb1-8d2c-4d23-8a25-65a34d1f2673.jpg",
+  "grid_cells": [
+    {
+      "corners": [
+        {"x": 181.98136043148975, "y": 180.87500292991302},
+        {"x": 80.99062551749896, "y": 176.94569670353974},
+        {"x": 78.42819076221744, "y": 294.24826550087346},
+        {"x": 183.0432587489509, "y": 294.49812289825013}
+      ],
+      "center": {"x": 131.1108588650393, "y": 236.64177200814407},
+      "id": "0d9307ac-0a57-48e9-897f-8d782e844509",
+      "truncated": true
+    },
+    ...
+  ]
+}
+```
 
 ### Known Bugs
 

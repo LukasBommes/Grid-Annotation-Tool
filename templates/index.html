@@ -188,7 +188,7 @@
             // load annotation data
             $.getJSON(json_path, function(json) {
                 corners = json.corners;
-                pv_modules = json.pv_modules;
+                pv_modules = json.grid_cells;
                 auxlines = json.auxlines;
                 auxcurves = json.auxcurves;
                 prev_intersections = json.prev_intersections;
@@ -373,7 +373,7 @@
           neighbours = order_corners_ccw(neighbours);
           center_point = compute_center_point(neighbours);
           // store the new pv module
-          pv_modules.push({"corners": neighbours, "center": center_point, "id": uuidv4(), "defects": [], "truncated": false});
+          pv_modules.push({"corners": neighbours, "center": center_point, "id": uuidv4(), "truncated": false});
           console.log("Placed a new grid cell at (", center_point.x, ",", center_point.y, ")");
           draw();
         }
@@ -533,7 +533,7 @@
             neighbours_manual_selection = order_corners_ccw(neighbours_manual_selection);
             center_point = compute_center_point(neighbours_manual_selection);
             // store the new pv module
-            pv_modules.push({"corners": neighbours_manual_selection, "center": center_point, "id": uuidv4(), "defects": [], "truncated": false});
+            pv_modules.push({"corners": neighbours_manual_selection, "center": center_point, "id": uuidv4(), "truncated": false});
             console.log("Placed a new grid cell at (", center_point.x, ",", center_point.y, ")");
             neighbours_manual_selection = [];
             draw();
@@ -830,7 +830,7 @@
     function save_to_json() {
       json_data = JSON.stringify({
           "image": selected_image["filename"],
-          "pv_modules": pv_modules,
+          "grid_cells": pv_modules,
           "corners": corners,
           "auxlines": auxlines,
           "auxcurves": auxcurves,
