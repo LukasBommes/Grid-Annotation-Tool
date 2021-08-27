@@ -30,37 +30,9 @@
       <button id='btn-add-corner'>Add Corners</button>
       <button id='btn-create-module'>Create Grid Cell</button>
       <button id='btn-create-module-manual'>Create Grid Cell (manual)</button>
-      <button id='btn-edit-module-details'>Edit Grid Cell Details</button>
+      <button id='btn-mark-module-partially-visible'>Toggle Cell Visibility</button>
       <button id='btn-erase'>Erase</button>
     </div>
-
-    <div id="pv_module_details">
-      <form id="pv_module_details_form">
-        <label for="output_module_id">Module ID:</label>
-        <output name="module_id" id="output_module_id"></output><br>
-
-        <div id="div_module_partially_visible">
-          <input type="checkbox" id="checkbox_module_partially_visible" name="module_partially_visible" value="module_partially_visible">
-          <label for="checkbox_module_partially_visible">Grid Cell partialy visible</label><br>
-        </div>
-
-        <!-- <fieldset id="fieldset_module_defects">
-          <legend>Module Defects:</legend>
-          <input type="checkbox" id="checkbox_hot_module" name="hot_module">
-          <label for="checkbox_hot_module">Hot module</label><br>
-          <input type="checkbox" id="checkbox_hot_column" name="hot_column">
-          <label for="checkbox_hot_column">Hot column</label><br>
-          <input type="checkbox" id="checkbox_checkerboard_pattern" name="checkerboard_pattern">
-          <label for="checkbox_checkerboard_pattern">Checkerboard pattern</label><br>
-          <input type="checkbox" id="checkbox_cell_hotspot" name="cell_hotspot">
-          <label for="checkbox_cell_hotspot">Hot cell(s)</label><br>
-          <input type="checkbox" id="checkbox_partial_cell_hotspot" name="partial_cell_hotspot">
-          <label for="checkbox_partial_cell_hotspot">Hot cell part(s)</label><br>
-          <input type="checkbox" id="checkbox_cell_unrelated_hotspot" name="cell_unrelated_hotspot">
-          <label for="checkbox_cell_unrelated_hotspot">Cell-unrelated hotspot</label><br>
-        </fieldset> -->
-      </form>
-    </div>      
   </div>
 
   <svg id="current_image"></svg>
@@ -373,8 +345,8 @@
         compute_intersections(prev_intersections);
         draw();
         console.log("Computed new corners as intersections of auxiliary lines.");
-      } else if (btn.id == 'btn-edit-module-details') {
-        marker_mode = "edit_module_details";
+      } else if (btn.id == 'btn-mark-module-partially-visible') {
+        marker_mode = "mark_module_partially_visible";
         svg.select("#cursor")
           .style("fill-opacity", 0)
           .style("stroke", null);
@@ -712,46 +684,19 @@
     };
 
     // selection of PV module with mouse
-    var edit_module_details_handler = function(d) {
-      if (marker_mode == "edit_module_details") {
+    var mark_module_partially_visible_handler = function(d) {
+      if (marker_mode == "mark_module_partially_visible") {
         selected_pv_module = d.id;
-        // hightlight the selected module and reset highlighting of other modules
-        d3.selectAll(".pv_module").style("fill-opacity", 0.5);
-        d3.select(this).style("fill-opacity", 0.9);
-        $("#output_module_id").val(d.id.slice(0, 8));
-        // load existing data into module details form
-        $("#checkbox_module_partially_visible").prop("checked", d.truncated);
-        // $("#checkbox_hot_module").prop("checked", d.defects.includes("hot_module"));
-        // $("#checkbox_hot_column").prop("checked", d.defects.includes("hot_column"));
-        // $("#checkbox_checkerboard_pattern").prop("checked", d.defects.includes("checkerboard_pattern"));
-        // $("#checkbox_cell_hotspot").prop("checked", d.defects.includes("cell_hotspot"));
-        // $("#checkbox_partial_cell_hotspot").prop("checked", d.defects.includes("partial_cell_hotspot"));
-        // $("#checkbox_cell_unrelated_hotspot").prop("checked", d.defects.includes("cell_unrelated_hotspot"));
-      }
-    };
-    // update details of selected pv module with the form
-    $("form :input").change(function() {
-      if (marker_mode == "edit_module_details") {
-        // read form status
-        var truncated = $("#checkbox_module_partially_visible").is(':checked');
-        // var defects = [];
-        // if ($("#checkbox_hot_module").is(':checked')) { defects.push("hot_module"); }
-        // if ($("#checkbox_hot_column").is(':checked')) { defects.push("hot_column"); }
-        // if ($("#checkbox_checkerboard_pattern").is(':checked')) { defects.push("checkerboard_pattern"); }
-        // if ($("#checkbox_cell_hotspot").is(':checked')) { defects.push("cell_hotspot"); }
-        // if ($("#checkbox_partial_cell_hotspot").is(':checked')) { defects.push("partial_cell_hotspot"); }
-        // if ($("#checkbox_cell_unrelated_hotspot").is(':checked')) { defects.push("cell_unrelated_hotspot"); }
-        // update pv module array
         for (var i = 0; i < pv_modules.length; i++) {
           if (pv_modules[i]["id"] == selected_pv_module) {
-            // pv_modules[i]["defects"] = defects;
-            pv_modules[i]["truncated"] = truncated;
+            truncated = pv_modules[i]["truncated"];
+            pv_modules[i]["truncated"] = !truncated;
           }
         }
         draw();
         save();
       }
-    });
+    };
 
     var draw = function() {
       // auxiliary lines
@@ -867,7 +812,7 @@
           .style("stroke", function (d) { if(d.truncated) {return "yellow"} else {return "lawngreen"}; })
           .style("stroke-width", 0.5)
           .on("mousedown", erase_mousedown_handler)
-          .on("click", edit_module_details_handler);
+          .on("click", mark_module_partially_visible_handler);
 
       // center markers
       svg.select("#g_pv_modules")

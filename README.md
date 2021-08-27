@@ -1,4 +1,15 @@
-This app can be used to manually annotate segmentation maps for photovoltaic modules.
+# Grid Annotation Tool
+
+A tool for annotating grid structures in images for computer vision research and applications. For some applications you may want to annotate a grid structure to train, for example, an instance segmentation model, such as Mask R-CNN.
+
+Different from existing annotation tools you do not have to draw a bounding box for each cell in your grid. Instead, you annotate the intersection lines, which is faster and yields cleaner co-linear edges.
+
+We initially developed this tool for annotating instance segmentation masks of photovoltaics modules, but it may be useful for other applications.
+
+
+### Installation
+
+This project requires Python 3, [Flask](https://pypi.org/project/Flask/) and [Flask-WTF](https://pypi.org/project/Flask-WTF/).
 
 
 ### Quickstart
@@ -29,3 +40,20 @@ You can drag auxiliary lines or corners in the image by clicking an dragging.
 ### Saving an annotation
 
 To save the annotation simply go to the next image by slecting it in the left sidebar. The annotation is being saved automatically in the directory `static/annotations`. For each image a json file named with the same UUID4 as the corresponding image can be found. Another json file is placed under `static/save`. This file is for internal use and contains additional information which is not necessary for downstream tasks.
+
+
+### Annotation File Format
+
+
+### Known Bugs
+
+The grid annotation tool relies on the [2D.js](http://www.kevlindev.com/geometry/2D/intersections/index.htm) library for calculating intersection points between auxiliary lines. It has a known bug, which causes it to miss some intersections between pairs of curves. In this case, please add the missed intersections manually by first clicking "Add Corners" and then clicking on the image.
+
+### About
+
+This software is written by **Lukas Bommes, M.Sc.** - [Helmholtz Institute Erlangen-Nürnberg for Renewable Energy](https://www.hi-ern.de/hi-ern/EN/home.html)
+
+
+#### License
+
+This project is licensed under the MIT license - see the [LICENSE](LICENSE) file for details.
