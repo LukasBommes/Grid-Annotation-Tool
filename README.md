@@ -4,7 +4,21 @@ A tool for annotating grid structures in images for computer vision research and
 
 Different from existing annotation tools you do not have to draw a bounding box for each cell in your grid. Instead, you annotate the intersection lines, which is faster and yields cleaner co-linear edges. To account for lens distortion you can annotate both lines and curves.
 
+![screenshot of grid annotation tool](screenshot.png)
+
 We initially developed this tool for annotating instance segmentation masks of photovoltaics modules, but it may be useful for other applications.
+
+### Examples
+
+![first example](example1.png)
+
+![first example](example2.png)
+
+![first example](example3.png)
+
+![first example](example4.png)
+
+![first example](example5.png)
 
 
 ### Installation
