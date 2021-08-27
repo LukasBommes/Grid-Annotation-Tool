@@ -44,7 +44,7 @@
           <label for="checkbox_module_partially_visible">Grid Cell partialy visible</label><br>
         </div>
 
-        <fieldset id="fieldset_module_defects">
+        <!-- <fieldset id="fieldset_module_defects">
           <legend>Module Defects:</legend>
           <input type="checkbox" id="checkbox_hot_module" name="hot_module">
           <label for="checkbox_hot_module">Hot module</label><br>
@@ -58,9 +58,9 @@
           <label for="checkbox_partial_cell_hotspot">Hot cell part(s)</label><br>
           <input type="checkbox" id="checkbox_cell_unrelated_hotspot" name="cell_unrelated_hotspot">
           <label for="checkbox_cell_unrelated_hotspot">Cell-unrelated hotspot</label><br>
-          </fieldset>
-        </div>
+        </fieldset> -->
       </form>
+    </div>      
   </div>
 
   <svg id="current_image"></svg>
@@ -391,7 +391,7 @@
       }
       else if (marker_mode == "center") {
         if (corners.length < 4) {
-          alert("Before you can create a PV module you need to place at least 4 corner markers first.");
+          alert("Before you can create a grid cell you need to place at least four corner markers first.");
         } else {
           // sort neighbouring corners ccw
           var neighbours = [];
@@ -402,7 +402,7 @@
           center_point = compute_center_point(neighbours);
           // store the new pv module
           pv_modules.push({"corners": neighbours, "center": center_point, "id": uuidv4(), "defects": [], "truncated": false});
-          console.log("Placed a new PV module at (", center_point.x, ",", center_point.y, ")");
+          console.log("Placed a new grid cell at (", center_point.x, ",", center_point.y, ")");
           draw();
         }
       }
@@ -541,7 +541,7 @@
              }
           }
           for (var i = del_idx.length-1; i >= 0; i--) {
-            console.log("Deleting PV module " + pv_modules[i].id + "(it contained deleted point " + corners[k].id + ")");
+            console.log("Deleting grid cell " + pv_modules[i].id + "(it contained deleted point " + corners[k].id + ")");
             pv_modules.splice(del_idx[i], 1);
           }
           corners.splice(k, 1);
@@ -554,7 +554,7 @@
       console.log("corner_mouseclick_handler");
       if (marker_mode == "center_manual") {
         if (corners.length < 4) {
-          alert("Before you can create a PV module you need to place at least 4 corner markers first.");
+          alert("Before you can create a grid cell you need to place at least four corner markers first.");
         } else {
           neighbours_manual_selection.push(d)
           if (neighbours_manual_selection.length == 4) {
@@ -562,7 +562,7 @@
             center_point = compute_center_point(neighbours_manual_selection);
             // store the new pv module
             pv_modules.push({"corners": neighbours_manual_selection, "center": center_point, "id": uuidv4(), "defects": [], "truncated": false});
-            console.log("Placed a new PV module at (", center_point.x, ",", center_point.y, ")");
+            console.log("Placed a new grid cell at (", center_point.x, ",", center_point.y, ")");
             neighbours_manual_selection = [];
             draw();
           }
@@ -673,7 +673,7 @@
            }
         }
         for (var i = del_idx.length-1; i >= 0; i--) {
-          console.log("Deleting PV module " + pv_modules[i].id + "(it contained deleted point " + element_id + ")");
+          console.log("Deleting grid cell " + pv_modules[i].id + "(it contained deleted point " + element_id + ")");
           pv_modules.splice(del_idx[i], 1);
         }
       }
@@ -721,12 +721,12 @@
         $("#output_module_id").val(d.id.slice(0, 8));
         // load existing data into module details form
         $("#checkbox_module_partially_visible").prop("checked", d.truncated);
-        $("#checkbox_hot_module").prop("checked", d.defects.includes("hot_module"));
-        $("#checkbox_hot_column").prop("checked", d.defects.includes("hot_column"));
-        $("#checkbox_checkerboard_pattern").prop("checked", d.defects.includes("checkerboard_pattern"));
-        $("#checkbox_cell_hotspot").prop("checked", d.defects.includes("cell_hotspot"));
-        $("#checkbox_partial_cell_hotspot").prop("checked", d.defects.includes("partial_cell_hotspot"));
-        $("#checkbox_cell_unrelated_hotspot").prop("checked", d.defects.includes("cell_unrelated_hotspot"));
+        // $("#checkbox_hot_module").prop("checked", d.defects.includes("hot_module"));
+        // $("#checkbox_hot_column").prop("checked", d.defects.includes("hot_column"));
+        // $("#checkbox_checkerboard_pattern").prop("checked", d.defects.includes("checkerboard_pattern"));
+        // $("#checkbox_cell_hotspot").prop("checked", d.defects.includes("cell_hotspot"));
+        // $("#checkbox_partial_cell_hotspot").prop("checked", d.defects.includes("partial_cell_hotspot"));
+        // $("#checkbox_cell_unrelated_hotspot").prop("checked", d.defects.includes("cell_unrelated_hotspot"));
       }
     };
     // update details of selected pv module with the form
@@ -734,17 +734,17 @@
       if (marker_mode == "edit_module_details") {
         // read form status
         var truncated = $("#checkbox_module_partially_visible").is(':checked');
-        var defects = [];
-        if ($("#checkbox_hot_module").is(':checked')) { defects.push("hot_module"); }
-        if ($("#checkbox_hot_column").is(':checked')) { defects.push("hot_column"); }
-        if ($("#checkbox_checkerboard_pattern").is(':checked')) { defects.push("checkerboard_pattern"); }
-        if ($("#checkbox_cell_hotspot").is(':checked')) { defects.push("cell_hotspot"); }
-        if ($("#checkbox_partial_cell_hotspot").is(':checked')) { defects.push("partial_cell_hotspot"); }
-        if ($("#checkbox_cell_unrelated_hotspot").is(':checked')) { defects.push("cell_unrelated_hotspot"); }
+        // var defects = [];
+        // if ($("#checkbox_hot_module").is(':checked')) { defects.push("hot_module"); }
+        // if ($("#checkbox_hot_column").is(':checked')) { defects.push("hot_column"); }
+        // if ($("#checkbox_checkerboard_pattern").is(':checked')) { defects.push("checkerboard_pattern"); }
+        // if ($("#checkbox_cell_hotspot").is(':checked')) { defects.push("cell_hotspot"); }
+        // if ($("#checkbox_partial_cell_hotspot").is(':checked')) { defects.push("partial_cell_hotspot"); }
+        // if ($("#checkbox_cell_unrelated_hotspot").is(':checked')) { defects.push("cell_unrelated_hotspot"); }
         // update pv module array
         for (var i = 0; i < pv_modules.length; i++) {
           if (pv_modules[i]["id"] == selected_pv_module) {
-            pv_modules[i]["defects"] = defects;
+            // pv_modules[i]["defects"] = defects;
             pv_modules[i]["truncated"] = truncated;
           }
         }
