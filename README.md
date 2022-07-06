@@ -1,5 +1,7 @@
 # Grid Annotation Tool
 
+News: This project has been deprecated in favour of [Grid Annotation Tool 2](https://github.com/LukasBommes/Grid-Anotation-Tool-2).
+
 A tool for annotating grid structures in images for computer vision research and applications. For some applications you may want to annotate a grid structure to train, for example, an instance segmentation model, such as Mask R-CNN.
 
 Different from existing annotation tools you do not have to draw a bounding box for each cell in your grid. Instead, you annotate the intersection lines, which is faster and yields cleaner co-linear edges. To account for lens distortion you can annotate both lines and curves.
